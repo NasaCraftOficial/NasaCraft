@@ -3,1266 +3,358 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NasaCraft - Explore o Universo</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            overflow: hidden;
-            background: #000;
-            font-family: 'Courier New', monospace;
-            cursor: none;
-        }
-
-        #blocker {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(ellipse at center, #0a0a2e 0%, #000000 100%);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            cursor: default;
-        }
-
-        #blocker h1 {
-            font-size: 72px;
-            color: #00d4ff;
-            text-shadow: 0 0 20px #00d4ff, 0 0 40px #0088ff, 0 0 80px #0044ff;
-            margin-bottom: 10px;
-            letter-spacing: 8px;
-            animation: glow 2s ease-in-out infinite alternate;
-        }
-
-        #blocker .subtitle {
-            font-size: 18px;
-            color: #88aacc;
-            margin-bottom: 40px;
-            letter-spacing: 4px;
-        }
-
-        #blocker .start-btn {
-            padding: 15px 50px;
-            font-size: 20px;
-            font-family: 'Courier New', monospace;
-            background: transparent;
-            border: 2px solid #00d4ff;
-            color: #00d4ff;
-            cursor: pointer;
-            letter-spacing: 3px;
-            transition: all 0.3s;
-        }
-
-        #blocker .start-btn:hover {
-            background: #00d4ff;
-            color: #000;
-            box-shadow: 0 0 30px #00d4ff;
-        }
-
-        #blocker .controls-info {
-            margin-top: 40px;
-            color: #556677;
-            font-size: 13px;
-            text-align: center;
-            line-height: 2;
-        }
-
-        #blocker .controls-info span {
-            color: #88aacc;
-        }
-
-        @keyframes glow {
-            from { text-shadow: 0 0 20px #00d4ff, 0 0 40px #0088ff; }
-            to { text-shadow: 0 0 30px #00d4ff, 0 0 60px #0088ff, 0 0 100px #0044ff; }
-        }
-
-        .stars {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-        }
-
-        .star {
-            position: absolute;
-            background: #fff;
-            border-radius: 50%;
-            animation: twinkle 3s ease-in-out infinite;
-        }
-
-        @keyframes twinkle {
-            0%, 100% { opacity: 0.3; }
-            50% { opacity: 1; }
-        }
-
-        #hud {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            pointer-events: none;
-            z-index: 100;
-            display: none;
-        }
-
-        #crosshair {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 100;
-            display: none;
-            pointer-events: none;
-        }
-
-        #crosshair::before,
-        #crosshair::after {
-            content: '';
-            position: absolute;
-            background: rgba(255, 255, 255, 0.8);
-        }
-
-        #crosshair::before {
-            width: 2px;
-            height: 20px;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-        }
-
-        #crosshair::after {
-            width: 20px;
-            height: 2px;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-        }
-
-        #hotbar {
-            display: flex;
-            justify-content: center;
-            gap: 4px;
-            padding: 10px;
-        }
-
-        .hotbar-slot {
-            width: 56px;
-            height: 56px;
-            border: 2px solid rgba(100, 150, 200, 0.5);
-            background: rgba(0, 10, 30, 0.7);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-        }
-
-        .hotbar-slot.selected {
-            border-color: #00d4ff;
-            box-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
-            background: rgba(0, 30, 60, 0.8);
-        }
-
-        .hotbar-slot .block-preview {
-            width: 40px;
-            height: 40px;
-            border-radius: 4px;
-        }
-
-        .hotbar-slot .slot-number {
-            position: absolute;
-            top: 2px;
-            left: 4px;
-            font-size: 10px;
-            color: rgba(255, 255, 255, 0.5);
-        }
-
-        #info-panel {
-            position: fixed;
-            top: 10px;
-            left: 10px;
-            color: #88ccff;
-            font-size: 12px;
-            z-index: 100;
-            display: none;
-            line-height: 1.6;
-            text-shadow: 1px 1px 2px #000;
-        }
-
-        #block-name {
-            position: fixed;
-            bottom: 80px;
-            left: 50%;
-            transform: translateX(-50%);
-            color: #fff;
-            font-size: 14px;
-            z-index: 100;
-            display: none;
-            text-shadow: 1px 1px 2px #000;
-            letter-spacing: 2px;
-        }
-
-        canvas {
-            display: block;
-        }
-    </style>
+    <title>NasaCraft - Servidor Minecraft Espacial</title>
+    <meta name="description" content="NasaCraft - O melhor servidor de Minecraft com tema espacial. Explore o universo, construa bases e viva aventuras intergalacticas!">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Exo+2:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div id="blocker">
-        <div class="stars" id="stars-container"></div>
-        <h1>NASACRAFT</h1>
-        <div class="subtitle">EXPLORE O UNIVERSO</div>
-        <button class="start-btn" id="start-btn">INICIAR JOGO</button>
-        <div class="controls-info">
-            <span>WASD</span> - Mover &nbsp;|&nbsp;
-            <span>MOUSE</span> - Olhar &nbsp;|&nbsp;
-            <span>ESPACO</span> - Pular<br>
-            <span>CLICK ESQUERDO</span> - Destruir Bloco &nbsp;|&nbsp;
-            <span>CLICK DIREITO</span> - Colocar Bloco<br>
-            <span>1-9</span> - Selecionar Bloco &nbsp;|&nbsp;
-            <span>SCROLL</span> - Trocar Bloco &nbsp;|&nbsp;
-            <span>ESC</span> - Menu
+    <!-- Particles Background -->
+    <canvas id="particles-canvas"></canvas>
+
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="#inicio" class="nav-logo">
+                <span class="logo-icon">&#9733;</span>
+                <span class="logo-text">NASA<span class="logo-highlight">CRAFT</span></span>
+            </a>
+            <button class="nav-toggle" id="nav-toggle" aria-label="Menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <ul class="nav-menu" id="nav-menu">
+                <li><a href="#inicio" class="nav-link">Inicio</a></li>
+                <li><a href="#sobre" class="nav-link">Sobre</a></li>
+                <li><a href="#recursos" class="nav-link">Recursos</a></li>
+                <li><a href="#como-jogar" class="nav-link">Como Jogar</a></li>
+                <li><a href="#regras" class="nav-link">Regras</a></li>
+                <li><a href="#equipe" class="nav-link">Equipe</a></li>
+                <li><a href="#jogar" class="nav-link nav-link-cta">Jogar Agora</a></li>
+            </ul>
         </div>
-    </div>
-
-    <div id="crosshair"></div>
-
-    <div id="hud">
-        <div id="hotbar"></div>
-    </div>
-
-    <div id="info-panel"></div>
-    <div id="block-name"></div>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script>
-    // =====================================================
-    // NASACRAFT - A Space-Themed Minecraft-Style Game
-    // =====================================================
-
-    const CHUNK_SIZE = 16;
-    const WORLD_HEIGHT = 64;
-    const RENDER_DISTANCE = 4;
-    const GRAVITY = -25;
-    const JUMP_FORCE = 10;
-    const PLAYER_SPEED = 8;
-    const PLAYER_HEIGHT = 1.7;
-    const PLAYER_RADIUS = 0.3;
-
-    // Block types with NASA/space theme
-    const BLOCKS = {
-        AIR: 0,
-        LUNAR_ROCK: 1,
-        LUNAR_DUST: 2,
-        MARS_STONE: 3,
-        MARS_SAND: 4,
-        ICE: 5,
-        DARK_ROCK: 6,
-        TITANIUM: 7,
-        CRYSTAL: 8,
-        NEBULA_STONE: 9,
-        ASTEROID_ROCK: 10,
-        SPACE_GLASS: 11,
-        ENERGY_CORE: 12,
-        COSMIC_DIRT: 13,
-        STARLIGHT_ORE: 14,
-        BEDROCK: 15,
-    };
-
-    const BLOCK_DATA = {
-        [BLOCKS.LUNAR_ROCK]:    { name: 'Rocha Lunar',       color: 0xAAAAAA, emissive: 0x000000 },
-        [BLOCKS.LUNAR_DUST]:    { name: 'Poeira Lunar',      color: 0xCCCCBB, emissive: 0x000000 },
-        [BLOCKS.MARS_STONE]:    { name: 'Pedra Marciana',    color: 0xCC5533, emissive: 0x000000 },
-        [BLOCKS.MARS_SAND]:     { name: 'Areia Marciana',    color: 0xDD7744, emissive: 0x000000 },
-        [BLOCKS.ICE]:           { name: 'Gelo Espacial',     color: 0x99DDFF, emissive: 0x112233, transparent: true, opacity: 0.7 },
-        [BLOCKS.DARK_ROCK]:     { name: 'Rocha Escura',      color: 0x333344, emissive: 0x000000 },
-        [BLOCKS.TITANIUM]:      { name: 'Titanio',           color: 0x8899AA, emissive: 0x111122 },
-        [BLOCKS.CRYSTAL]:       { name: 'Cristal Cosmico',   color: 0xAA44FF, emissive: 0x5522AA, transparent: true, opacity: 0.8 },
-        [BLOCKS.NEBULA_STONE]:  { name: 'Pedra Nebulosa',    color: 0x5544AA, emissive: 0x221155 },
-        [BLOCKS.ASTEROID_ROCK]: { name: 'Rocha de Asteroide',color: 0x666655, emissive: 0x000000 },
-        [BLOCKS.SPACE_GLASS]:   { name: 'Vidro Espacial',    color: 0xAADDFF, emissive: 0x223344, transparent: true, opacity: 0.3 },
-        [BLOCKS.ENERGY_CORE]:   { name: 'Nucleo de Energia', color: 0x00FFAA, emissive: 0x00AA66 },
-        [BLOCKS.COSMIC_DIRT]:   { name: 'Terra Cosmica',     color: 0x665544, emissive: 0x000000 },
-        [BLOCKS.STARLIGHT_ORE]: { name: 'Minerio Estelar',   color: 0xFFDD44, emissive: 0xAA8800 },
-        [BLOCKS.BEDROCK]:       { name: 'Rocha Base',        color: 0x222222, emissive: 0x000000 },
-    };
-
-    // Game state
-    let scene, camera, renderer;
-    let isPlaying = false;
-    let clock = new THREE.Clock();
-
-    // Player state
-    let player = {
-        position: new THREE.Vector3(8, 40, 8),
-        velocity: new THREE.Vector3(0, 0, 0),
-        onGround: false,
-        yaw: 0,
-        pitch: 0,
-        selectedSlot: 0,
-    };
-
-    // Hotbar inventory
-    let hotbar = [
-        BLOCKS.LUNAR_ROCK,
-        BLOCKS.MARS_STONE,
-        BLOCKS.ICE,
-        BLOCKS.TITANIUM,
-        BLOCKS.CRYSTAL,
-        BLOCKS.NEBULA_STONE,
-        BLOCKS.ENERGY_CORE,
-        BLOCKS.STARLIGHT_ORE,
-        BLOCKS.SPACE_GLASS,
-    ];
-
-    // World data
-    let chunks = {};
-    let chunkMeshes = {};
-    let blockMaterials = {};
-
-    // Input state
-    let keys = {};
-    let mouseDX = 0, mouseDY = 0;
-
-    // Raycaster for block interaction
-    let raycaster = new THREE.Raycaster();
-    raycaster.far = 8;
-
-    // Highlight box for targeted block
-    let highlightBox;
-
-    // =====================================================
-    // INITIALIZATION
-    // =====================================================
-
-    function init() {
-        // Create scene
-        scene = new THREE.Scene();
-        scene.background = new THREE.Color(0x020210);
-        scene.fog = new THREE.FogExp2(0x020210, 0.012);
-
-        // Create camera
-        camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-
-        // Create renderer
-        renderer = new THREE.WebGLRenderer({ antialias: true });
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-        renderer.shadowMap.enabled = false;
-        document.body.appendChild(renderer.domElement);
-
-        // Lighting
-        const ambientLight = new THREE.AmbientLight(0x334466, 0.6);
-        scene.add(ambientLight);
-
-        const dirLight = new THREE.DirectionalLight(0xAABBDD, 0.8);
-        dirLight.position.set(50, 80, 30);
-        scene.add(dirLight);
-
-        const hemisphereLight = new THREE.HemisphereLight(0x334466, 0x221133, 0.4);
-        scene.add(hemisphereLight);
-
-        // Create block materials
-        createBlockMaterials();
-
-        // Create highlight box
-        const highlightGeo = new THREE.BoxGeometry(1.005, 1.005, 1.005);
-        const highlightMat = new THREE.MeshBasicMaterial({
-            color: 0xffffff,
-            wireframe: true,
-            transparent: true,
-            opacity: 0.5,
-        });
-        highlightBox = new THREE.Mesh(highlightGeo, highlightMat);
-        highlightBox.visible = false;
-        scene.add(highlightBox);
-
-        // Create starfield
-        createStarfield();
-
-        // Generate initial world
-        generateInitialWorld();
-
-        // Setup HUD
-        setupHUD();
-
-        // Setup event listeners
-        setupEvents();
-
-        // Create stars for menu
-        createMenuStars();
-
-        // Start render loop
-        animate();
-    }
-
-    function createBlockMaterials() {
-        for (const [id, data] of Object.entries(BLOCK_DATA)) {
-            const matParams = {
-                color: data.color,
-                emissive: data.emissive || 0x000000,
-                emissiveIntensity: data.emissive ? 0.5 : 0,
-                flatShading: true,
-            };
-            if (data.transparent) {
-                matParams.transparent = true;
-                matParams.opacity = data.opacity || 0.5;
-            }
-            blockMaterials[id] = new THREE.MeshLambertMaterial(matParams);
-        }
-    }
-
-    function createStarfield() {
-        const starsGeo = new THREE.BufferGeometry();
-        const positions = [];
-        for (let i = 0; i < 5000; i++) {
-            const r = 200 + Math.random() * 300;
-            const theta = Math.random() * Math.PI * 2;
-            const phi = Math.random() * Math.PI;
-            positions.push(
-                r * Math.sin(phi) * Math.cos(theta),
-                r * Math.cos(phi),
-                r * Math.sin(phi) * Math.sin(theta)
-            );
-        }
-        starsGeo.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
-        const starsMat = new THREE.PointsMaterial({
-            color: 0xffffff,
-            size: 0.8,
-            transparent: true,
-            opacity: 0.8,
-        });
-        scene.add(new THREE.Points(starsGeo, starsMat));
-    }
-
-    function createMenuStars() {
-        const container = document.getElementById('stars-container');
-        for (let i = 0; i < 100; i++) {
-            const star = document.createElement('div');
-            star.className = 'star';
-            const size = Math.random() * 3;
-            star.style.width = size + 'px';
-            star.style.height = size + 'px';
-            star.style.left = Math.random() * 100 + '%';
-            star.style.top = Math.random() * 100 + '%';
-            star.style.animationDelay = Math.random() * 3 + 's';
-            container.appendChild(star);
-        }
-    }
-
-    // =====================================================
-    // WORLD GENERATION
-    // =====================================================
-
-    function getChunkKey(cx, cz) {
-        return cx + ',' + cz;
-    }
-
-    function generateChunk(cx, cz) {
-        const key = getChunkKey(cx, cz);
-        if (chunks[key]) return;
-
-        const data = new Uint8Array(CHUNK_SIZE * WORLD_HEIGHT * CHUNK_SIZE);
-
-        for (let x = 0; x < CHUNK_SIZE; x++) {
-            for (let z = 0; z < CHUNK_SIZE; z++) {
-                const worldX = cx * CHUNK_SIZE + x;
-                const worldZ = cz * CHUNK_SIZE + z;
-
-                // Multi-layered terrain generation using sine waves
-                const height = getTerrainHeight(worldX, worldZ);
-
-                for (let y = 0; y < WORLD_HEIGHT; y++) {
-                    const idx = x * WORLD_HEIGHT * CHUNK_SIZE + y * CHUNK_SIZE + z;
-
-                    if (y === 0) {
-                        data[idx] = BLOCKS.BEDROCK;
-                    } else if (y < height - 4) {
-                        // Deep layer - varies by biome
-                        const biome = getBiome(worldX, worldZ);
-                        if (biome === 'mars') {
-                            data[idx] = BLOCKS.MARS_STONE;
-                        } else if (biome === 'ice') {
-                            data[idx] = BLOCKS.DARK_ROCK;
-                        } else if (biome === 'nebula') {
-                            data[idx] = BLOCKS.NEBULA_STONE;
-                        } else if (biome === 'asteroid') {
-                            data[idx] = BLOCKS.ASTEROID_ROCK;
-                        } else {
-                            data[idx] = BLOCKS.LUNAR_ROCK;
-                        }
-
-                        // Ore generation
-                        if (y < 15 && pseudoRandom(worldX * 73 + y * 137 + worldZ * 211) > 0.97) {
-                            data[idx] = BLOCKS.STARLIGHT_ORE;
-                        }
-                        if (y < 20 && pseudoRandom(worldX * 53 + y * 97 + worldZ * 181) > 0.96) {
-                            data[idx] = BLOCKS.ENERGY_CORE;
-                        }
-                        if (y < 25 && pseudoRandom(worldX * 83 + y * 157 + worldZ * 231) > 0.95) {
-                            data[idx] = BLOCKS.TITANIUM;
-                        }
-                        if (y < 10 && pseudoRandom(worldX * 43 + y * 67 + worldZ * 151) > 0.98) {
-                            data[idx] = BLOCKS.CRYSTAL;
-                        }
-                    } else if (y < height) {
-                        // Surface layer
-                        const biome = getBiome(worldX, worldZ);
-                        if (biome === 'mars') {
-                            data[idx] = BLOCKS.MARS_SAND;
-                        } else if (biome === 'ice') {
-                            data[idx] = BLOCKS.ICE;
-                        } else if (biome === 'nebula') {
-                            data[idx] = BLOCKS.COSMIC_DIRT;
-                        } else if (biome === 'asteroid') {
-                            data[idx] = BLOCKS.ASTEROID_ROCK;
-                        } else {
-                            data[idx] = BLOCKS.LUNAR_DUST;
-                        }
-                    } else {
-                        data[idx] = BLOCKS.AIR;
-                    }
-                }
-            }
-        }
-
-        chunks[key] = data;
-    }
-
-    function getTerrainHeight(x, z) {
-        // Multi-octave noise using sine waves
-        let height = 20;
-        height += Math.sin(x * 0.05) * 4;
-        height += Math.sin(z * 0.05) * 4;
-        height += Math.sin(x * 0.02 + z * 0.03) * 8;
-        height += Math.sin(x * 0.1) * Math.sin(z * 0.1) * 3;
-        height += Math.sin(x * 0.005 + 1.5) * Math.sin(z * 0.007 + 0.8) * 12;
-
-        // Add some "craters"
-        var craterCellX = Math.floor(x / 20);
-        var craterCellZ = Math.floor(z / 20);
-        var craterCheck = pseudoRandom(craterCellX * 1000 + craterCellZ);
-        if (craterCheck > 0.85) {
-            var cx = craterCellX * 20 + 10;
-            var cz = craterCellZ * 20 + 10;
-            var dist = Math.sqrt((x - cx) * (x - cx) + (z - cz) * (z - cz));
-            if (dist < 8) {
-                height -= (8 - dist) * 1.5;
-            }
-        }
-
-        return Math.max(3, Math.floor(height));
-    }
-
-    function getBiome(x, z) {
-        const val = Math.sin(x * 0.008 + 0.5) * Math.sin(z * 0.006 + 1.2) +
-                    Math.sin(x * 0.003) * 0.5;
-        if (val > 0.5) return 'mars';
-        if (val > 0.1) return 'lunar';
-        if (val > -0.3) return 'asteroid';
-        if (val > -0.6) return 'nebula';
-        return 'ice';
-    }
-
-    function pseudoRandom(seed) {
-        const x = Math.sin(seed * 12.9898 + 78.233) * 43758.5453;
-        return x - Math.floor(x);
-    }
-
-    function generateInitialWorld() {
-        const pcx = Math.floor(player.position.x / CHUNK_SIZE);
-        const pcz = Math.floor(player.position.z / CHUNK_SIZE);
-
-        for (let dx = -RENDER_DISTANCE; dx <= RENDER_DISTANCE; dx++) {
-            for (let dz = -RENDER_DISTANCE; dz <= RENDER_DISTANCE; dz++) {
-                const cx = pcx + dx;
-                const cz = pcz + dz;
-                generateChunk(cx, cz);
-                buildChunkMesh(cx, cz);
-            }
-        }
-
-        // Set player Y position on top of terrain
-        const spawnHeight = getTerrainHeight(Math.floor(player.position.x), Math.floor(player.position.z));
-        player.position.y = spawnHeight + 3;
-    }
-
-    // =====================================================
-    // CHUNK MESHING
-    // =====================================================
-
-    function getBlock(x, y, z) {
-        if (y < 0 || y >= WORLD_HEIGHT) return BLOCKS.AIR;
-        const cx = Math.floor(x / CHUNK_SIZE);
-        const cz = Math.floor(z / CHUNK_SIZE);
-        const key = getChunkKey(cx, cz);
-        const chunk = chunks[key];
-        if (!chunk) return BLOCKS.AIR;
-
-        const lx = ((x % CHUNK_SIZE) + CHUNK_SIZE) % CHUNK_SIZE;
-        const lz = ((z % CHUNK_SIZE) + CHUNK_SIZE) % CHUNK_SIZE;
-        return chunk[lx * WORLD_HEIGHT * CHUNK_SIZE + y * CHUNK_SIZE + lz];
-    }
-
-    function setBlock(x, y, z, type) {
-        if (y < 0 || y >= WORLD_HEIGHT) return;
-        const cx = Math.floor(x / CHUNK_SIZE);
-        const cz = Math.floor(z / CHUNK_SIZE);
-        const key = getChunkKey(cx, cz);
-        if (!chunks[key]) return;
-
-        const lx = ((x % CHUNK_SIZE) + CHUNK_SIZE) % CHUNK_SIZE;
-        const lz = ((z % CHUNK_SIZE) + CHUNK_SIZE) % CHUNK_SIZE;
-        chunks[key][lx * WORLD_HEIGHT * CHUNK_SIZE + y * CHUNK_SIZE + lz] = type;
-
-        // Rebuild this chunk and potentially adjacent ones
-        buildChunkMesh(cx, cz);
-        if (lx === 0) buildChunkMesh(cx - 1, cz);
-        if (lx === CHUNK_SIZE - 1) buildChunkMesh(cx + 1, cz);
-        if (lz === 0) buildChunkMesh(cx, cz - 1);
-        if (lz === CHUNK_SIZE - 1) buildChunkMesh(cx, cz + 1);
-    }
-
-    function buildChunkMesh(cx, cz) {
-        const key = getChunkKey(cx, cz);
-        const chunk = chunks[key];
-        if (!chunk) return;
-
-        // Remove old mesh
-        if (chunkMeshes[key]) {
-            chunkMeshes[key].forEach(function(mesh) {
-                scene.remove(mesh);
-                mesh.geometry.dispose();
-            });
-        }
-
-        // Group faces by material
-        const geometryData = {};
-
-        for (let x = 0; x < CHUNK_SIZE; x++) {
-            for (let y = 0; y < WORLD_HEIGHT; y++) {
-                for (let z = 0; z < CHUNK_SIZE; z++) {
-                    const idx = x * WORLD_HEIGHT * CHUNK_SIZE + y * CHUNK_SIZE + z;
-                    const blockType = chunk[idx];
-                    if (blockType === BLOCKS.AIR) continue;
-
-                    const worldX = cx * CHUNK_SIZE + x;
-                    const worldZ = cz * CHUNK_SIZE + z;
-
-                    if (!geometryData[blockType]) {
-                        geometryData[blockType] = { vertices: [], normals: [], indices: [] };
-                    }
-
-                    const gd = geometryData[blockType];
-
-                    // Check each face
-                    const faces = [
-                        { dir: [0, 1, 0], normal: [0, 1, 0] },   // top
-                        { dir: [0, -1, 0], normal: [0, -1, 0] },  // bottom
-                        { dir: [1, 0, 0], normal: [1, 0, 0] },    // right
-                        { dir: [-1, 0, 0], normal: [-1, 0, 0] },  // left
-                        { dir: [0, 0, 1], normal: [0, 0, 1] },    // front
-                        { dir: [0, 0, -1], normal: [0, 0, -1] },  // back
-                    ];
-
-                    for (let fi = 0; fi < faces.length; fi++) {
-                        const face = faces[fi];
-                        const nx = worldX + face.dir[0];
-                        const ny = y + face.dir[1];
-                        const nz = worldZ + face.dir[2];
-                        const neighbor = getBlock(nx, ny, nz);
-
-                        if (neighbor === BLOCKS.AIR ||
-                            (BLOCK_DATA[neighbor] && BLOCK_DATA[neighbor].transparent && blockType !== neighbor)) {
-                            addFace(gd, worldX, y, worldZ, face.dir, face.normal);
-                        }
-                    }
-                }
-            }
-        }
-
-        // Create meshes
-        const meshes = [];
-        for (const blockType of Object.keys(geometryData)) {
-            const gd = geometryData[blockType];
-            if (gd.vertices.length === 0) continue;
-
-            const geometry = new THREE.BufferGeometry();
-            geometry.setAttribute('position', new THREE.Float32BufferAttribute(gd.vertices, 3));
-            geometry.setAttribute('normal', new THREE.Float32BufferAttribute(gd.normals, 3));
-            geometry.setIndex(gd.indices);
-
-            const material = blockMaterials[blockType];
-            const mesh = new THREE.Mesh(geometry, material);
-            scene.add(mesh);
-            meshes.push(mesh);
-        }
-
-        chunkMeshes[key] = meshes;
-    }
-
-    function addFace(gd, x, y, z, dir, normal) {
-        const baseIndex = gd.vertices.length / 3;
-
-        // Define face vertices based on direction
-        var verts;
-        if (dir[1] === 1) {
-            // Top face
-            verts = [
-                [x, y + 1, z],
-                [x + 1, y + 1, z],
-                [x + 1, y + 1, z + 1],
-                [x, y + 1, z + 1],
-            ];
-        } else if (dir[1] === -1) {
-            // Bottom face
-            verts = [
-                [x, y, z + 1],
-                [x + 1, y, z + 1],
-                [x + 1, y, z],
-                [x, y, z],
-            ];
-        } else if (dir[0] === 1) {
-            // Right face
-            verts = [
-                [x + 1, y, z],
-                [x + 1, y + 1, z],
-                [x + 1, y + 1, z + 1],
-                [x + 1, y, z + 1],
-            ];
-        } else if (dir[0] === -1) {
-            // Left face
-            verts = [
-                [x, y, z + 1],
-                [x, y + 1, z + 1],
-                [x, y + 1, z],
-                [x, y, z],
-            ];
-        } else if (dir[2] === 1) {
-            // Front face
-            verts = [
-                [x + 1, y, z + 1],
-                [x + 1, y + 1, z + 1],
-                [x, y + 1, z + 1],
-                [x, y, z + 1],
-            ];
-        } else {
-            // Back face
-            verts = [
-                [x, y, z],
-                [x, y + 1, z],
-                [x + 1, y + 1, z],
-                [x + 1, y, z],
-            ];
-        }
-
-        for (let vi = 0; vi < verts.length; vi++) {
-            gd.vertices.push(verts[vi][0], verts[vi][1], verts[vi][2]);
-            gd.normals.push(normal[0], normal[1], normal[2]);
-        }
-
-        gd.indices.push(
-            baseIndex, baseIndex + 1, baseIndex + 2,
-            baseIndex, baseIndex + 2, baseIndex + 3
-        );
-    }
-
-    // =====================================================
-    // CHUNK MANAGEMENT
-    // =====================================================
-
-    function updateChunks() {
-        const pcx = Math.floor(player.position.x / CHUNK_SIZE);
-        const pcz = Math.floor(player.position.z / CHUNK_SIZE);
-
-        // Generate new chunks
-        for (let dx = -RENDER_DISTANCE; dx <= RENDER_DISTANCE; dx++) {
-            for (let dz = -RENDER_DISTANCE; dz <= RENDER_DISTANCE; dz++) {
-                const cx = pcx + dx;
-                const cz = pcz + dz;
-                const key = getChunkKey(cx, cz);
-                if (!chunks[key]) {
-                    generateChunk(cx, cz);
-                    buildChunkMesh(cx, cz);
-                }
-            }
-        }
-
-        // Remove far chunks
-        var chunkKeys = Object.keys(chunks);
-        for (let ki = 0; ki < chunkKeys.length; ki++) {
-            var key = chunkKeys[ki];
-            var parts = key.split(',');
-            var cx = parseInt(parts[0]);
-            var cz = parseInt(parts[1]);
-            if (Math.abs(cx - pcx) > RENDER_DISTANCE + 2 || Math.abs(cz - pcz) > RENDER_DISTANCE + 2) {
-                if (chunkMeshes[key]) {
-                    chunkMeshes[key].forEach(function(mesh) {
-                        scene.remove(mesh);
-                        mesh.geometry.dispose();
-                    });
-                    delete chunkMeshes[key];
-                }
-                delete chunks[key];
-            }
-        }
-    }
-
-    // =====================================================
-    // PLAYER PHYSICS & CONTROLS
-    // =====================================================
-
-    function updatePlayer(dt) {
-        if (!isPlaying) return;
-
-        // Mouse look
-        const sensitivity = 0.002;
-        player.yaw -= mouseDX * sensitivity;
-        player.pitch -= mouseDY * sensitivity;
-        player.pitch = Math.max(-Math.PI / 2 + 0.01, Math.min(Math.PI / 2 - 0.01, player.pitch));
-        mouseDX = 0;
-        mouseDY = 0;
-
-        // Movement direction
-        const forward = new THREE.Vector3(
-            -Math.sin(player.yaw),
-            0,
-            -Math.cos(player.yaw)
-        );
-        const right = new THREE.Vector3(
-            Math.cos(player.yaw),
-            0,
-            -Math.sin(player.yaw)
-        );
-
-        var moveDir = new THREE.Vector3(0, 0, 0);
-        if (keys['KeyW'] || keys['ArrowUp']) moveDir.add(forward);
-        if (keys['KeyS'] || keys['ArrowDown']) moveDir.sub(forward);
-        if (keys['KeyD'] || keys['ArrowRight']) moveDir.add(right);
-        if (keys['KeyA'] || keys['ArrowLeft']) moveDir.sub(right);
-
-        if (moveDir.length() > 0) {
-            moveDir.normalize();
-        }
-
-        // Apply horizontal movement
-        player.velocity.x = moveDir.x * PLAYER_SPEED;
-        player.velocity.z = moveDir.z * PLAYER_SPEED;
-
-        // Jump
-        if ((keys['Space']) && player.onGround) {
-            player.velocity.y = JUMP_FORCE;
-            player.onGround = false;
-        }
-
-        // Gravity
-        player.velocity.y += GRAVITY * dt;
-
-        // Move with collision
-        var newPos = player.position.clone();
-
-        // Move X
-        newPos.x += player.velocity.x * dt;
-        if (collidesAt(newPos.x, player.position.y, player.position.z)) {
-            newPos.x = player.position.x;
-            player.velocity.x = 0;
-        }
-
-        // Move Z
-        newPos.z += player.velocity.z * dt;
-        if (collidesAt(newPos.x, player.position.y, newPos.z)) {
-            newPos.z = player.position.z;
-            player.velocity.z = 0;
-        }
-
-        // Move Y
-        newPos.y += player.velocity.y * dt;
-        if (collidesAt(newPos.x, newPos.y, newPos.z)) {
-            if (player.velocity.y < 0) {
-                player.onGround = true;
-                // Snap to ground
-                newPos.y = Math.floor(player.position.y - 0.01) + PLAYER_HEIGHT + 0.01;
-            }
-            if (player.position.y > newPos.y) {
-                newPos.y = player.position.y;
-            }
-            player.velocity.y = 0;
-        } else {
-            player.onGround = false;
-        }
-
-        // Prevent falling below world
-        if (newPos.y < 1) {
-            newPos.y = 40;
-            player.velocity.y = 0;
-        }
-
-        player.position.copy(newPos);
-
-        // Update camera
-        camera.position.copy(player.position);
-        camera.rotation.order = 'YXZ';
-        camera.rotation.y = player.yaw;
-        camera.rotation.x = player.pitch;
-    }
-
-    function collidesAt(x, y, z) {
-        // Check AABB collision
-        const minX = Math.floor(x - PLAYER_RADIUS);
-        const maxX = Math.floor(x + PLAYER_RADIUS);
-        const minY = Math.floor(y - PLAYER_HEIGHT);
-        const maxY = Math.floor(y + 0.1);
-        const minZ = Math.floor(z - PLAYER_RADIUS);
-        const maxZ = Math.floor(z + PLAYER_RADIUS);
-
-        for (let bx = minX; bx <= maxX; bx++) {
-            for (let by = minY; by <= maxY; by++) {
-                for (let bz = minZ; bz <= maxZ; bz++) {
-                    var block = getBlock(bx, by, bz);
-                    if (block !== BLOCKS.AIR) {
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
-    }
-
-    // =====================================================
-    // BLOCK INTERACTION (Raycast)
-    // =====================================================
-
-    function getTargetBlock() {
-        var dir = new THREE.Vector3();
-        camera.getWorldDirection(dir);
-
-        // Step through ray
-        var step = 0.05;
-        var maxDist = 8;
-        var prevX, prevY, prevZ;
-
-        for (var d = 0; d < maxDist; d += step) {
-            var px = camera.position.x + dir.x * d;
-            var py = camera.position.y + dir.y * d;
-            var pz = camera.position.z + dir.z * d;
-
-            var bx = Math.floor(px);
-            var by = Math.floor(py);
-            var bz = Math.floor(pz);
-
-            var block = getBlock(bx, by, bz);
-            if (block !== BLOCKS.AIR) {
-                return {
-                    x: bx, y: by, z: bz, block: block,
-                    prevX: prevX !== undefined ? prevX : bx,
-                    prevY: prevY !== undefined ? prevY : by,
-                    prevZ: prevZ !== undefined ? prevZ : bz,
-                };
-            }
-
-            prevX = bx;
-            prevY = by;
-            prevZ = bz;
-        }
-
-        return null;
-    }
-
-    function breakBlock() {
-        var target = getTargetBlock();
-        if (target && target.block !== BLOCKS.BEDROCK) {
-            setBlock(target.x, target.y, target.z, BLOCKS.AIR);
-            // Play break particle effect
-            createParticles(target.x + 0.5, target.y + 0.5, target.z + 0.5, BLOCK_DATA[target.block].color);
-        }
-    }
-
-    function placeBlock(e) {
-        e.preventDefault();
-        var target = getTargetBlock();
-        if (target) {
-            var px = target.prevX;
-            var py = target.prevY;
-            var pz = target.prevZ;
-
-            // Don't place block where player is standing
-            var playerBlockX = Math.floor(player.position.x);
-            var playerBlockY = Math.floor(player.position.y - PLAYER_HEIGHT);
-            var playerBlockYHead = Math.floor(player.position.y);
-            var playerBlockZ = Math.floor(player.position.z);
-
-            if (px === playerBlockX && pz === playerBlockZ &&
-                (py === playerBlockY || py === playerBlockYHead || py === playerBlockY + 1)) {
-                return;
-            }
-
-            var blockType = hotbar[player.selectedSlot];
-            setBlock(px, py, pz, blockType);
-        }
-    }
-
-    // =====================================================
-    // PARTICLE EFFECTS
-    // =====================================================
-
-    var particles = [];
-
-    function createParticles(x, y, z, color) {
-        for (var i = 0; i < 8; i++) {
-            var geo = new THREE.BoxGeometry(0.1, 0.1, 0.1);
-            var mat = new THREE.MeshBasicMaterial({ color: color });
-            var mesh = new THREE.Mesh(geo, mat);
-            mesh.position.set(x, y, z);
-            scene.add(mesh);
-            particles.push({
-                mesh: mesh,
-                velocity: new THREE.Vector3(
-                    (Math.random() - 0.5) * 5,
-                    Math.random() * 5,
-                    (Math.random() - 0.5) * 5
-                ),
-                life: 1.0,
-            });
-        }
-    }
-
-    function updateParticles(dt) {
-        for (var i = particles.length - 1; i >= 0; i--) {
-            var p = particles[i];
-            p.velocity.y -= 15 * dt;
-            p.mesh.position.add(p.velocity.clone().multiplyScalar(dt));
-            p.life -= dt * 2;
-            p.mesh.material.opacity = p.life;
-            p.mesh.material.transparent = true;
-
-            if (p.life <= 0) {
-                scene.remove(p.mesh);
-                p.mesh.geometry.dispose();
-                p.mesh.material.dispose();
-                particles.splice(i, 1);
-            }
-        }
-    }
-
-    // =====================================================
-    // HUD
-    // =====================================================
-
-    function setupHUD() {
-        var hotbarEl = document.getElementById('hotbar');
-        hotbarEl.innerHTML = '';
-
-        for (var i = 0; i < 9; i++) {
-            var slot = document.createElement('div');
-            slot.className = 'hotbar-slot' + (i === player.selectedSlot ? ' selected' : '');
-
-            var num = document.createElement('span');
-            num.className = 'slot-number';
-            num.textContent = i + 1;
-            slot.appendChild(num);
-
-            if (hotbar[i]) {
-                var preview = document.createElement('div');
-                preview.className = 'block-preview';
-                var color = BLOCK_DATA[hotbar[i]].color;
-                var r = (color >> 16) & 0xFF;
-                var g = (color >> 8) & 0xFF;
-                var b = color & 0xFF;
-                preview.style.background = 'linear-gradient(135deg, rgb(' + r + ',' + g + ',' + b + '), rgb(' + Math.max(0, r - 40) + ',' + Math.max(0, g - 40) + ',' + Math.max(0, b - 40) + '))';
-                preview.style.boxShadow = 'inset 0 0 10px rgba(' + r + ',' + g + ',' + b + ',0.5)';
-                slot.appendChild(preview);
-            }
-
-            hotbarEl.appendChild(slot);
-        }
-
-        // Show block name
-        updateBlockName();
-    }
-
-    function updateBlockName() {
-        var blockNameEl = document.getElementById('block-name');
-        var block = hotbar[player.selectedSlot];
-        if (block && BLOCK_DATA[block]) {
-            blockNameEl.textContent = BLOCK_DATA[block].name;
-        }
-    }
-
-    function updateInfoPanel() {
-        var panel = document.getElementById('info-panel');
-        var px = player.position.x.toFixed(1);
-        var py = player.position.y.toFixed(1);
-        var pz = player.position.z.toFixed(1);
-        var biome = getBiome(Math.floor(player.position.x), Math.floor(player.position.z));
-        var biomeNames = {
-            'mars': 'Planicie Marciana',
-            'lunar': 'Superficie Lunar',
-            'ice': 'Campo de Gelo',
-            'nebula': 'Zona Nebulosa',
-            'asteroid': 'Campo de Asteroides'
-        };
-        panel.innerHTML =
-            '<b>NasaCraft v1.0</b><br>' +
-            'XYZ: ' + px + ' / ' + py + ' / ' + pz + '<br>' +
-            'Bioma: ' + (biomeNames[biome] || biome) + '<br>' +
-            'Chunks: ' + Object.keys(chunks).length;
-    }
-
-    // =====================================================
-    // EVENT HANDLING
-    // =====================================================
-
-    function setupEvents() {
-        // Start button
-        document.getElementById('start-btn').addEventListener('click', startGame);
-
-        // Keyboard
-        document.addEventListener('keydown', function(e) {
-            keys[e.code] = true;
-
-            // Number keys for hotbar
-            if (e.code >= 'Digit1' && e.code <= 'Digit9') {
-                player.selectedSlot = parseInt(e.code.charAt(5)) - 1;
-                setupHUD();
-            }
-
-            // ESC to pause
-            if (e.code === 'Escape' && isPlaying) {
-                stopGame();
-            }
-        });
-
-        document.addEventListener('keyup', function(e) {
-            keys[e.code] = false;
-        });
-
-        // Mouse
-        document.addEventListener('mousemove', function(e) {
-            if (isPlaying && document.pointerLockElement) {
-                mouseDX += e.movementX;
-                mouseDY += e.movementY;
-            }
-        });
-
-        document.addEventListener('mousedown', function(e) {
-            if (!isPlaying) return;
-            if (e.button === 0) {
-                breakBlock();
-            }
-        });
-
-        document.addEventListener('contextmenu', function(e) {
-            if (isPlaying) {
-                placeBlock(e);
-            }
-        });
-
-        // Scroll to change block
-        document.addEventListener('wheel', function(e) {
-            if (!isPlaying) return;
-            if (e.deltaY > 0) {
-                player.selectedSlot = (player.selectedSlot + 1) % 9;
-            } else {
-                player.selectedSlot = (player.selectedSlot + 8) % 9;
-            }
-            setupHUD();
-        });
-
-        // Pointer lock change
-        document.addEventListener('pointerlockchange', function() {
-            if (!document.pointerLockElement && isPlaying) {
-                stopGame();
-            }
-        });
-
-        // Window resize
-        window.addEventListener('resize', function() {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        });
-    }
-
-    function startGame() {
-        document.getElementById('blocker').style.display = 'none';
-        document.getElementById('hud').style.display = 'block';
-        document.getElementById('crosshair').style.display = 'block';
-        document.getElementById('info-panel').style.display = 'block';
-        document.getElementById('block-name').style.display = 'block';
-        document.body.style.cursor = 'none';
-
-        renderer.domElement.requestPointerLock();
-        isPlaying = true;
-        clock.start();
-    }
-
-    function stopGame() {
-        document.getElementById('blocker').style.display = 'flex';
-        document.getElementById('hud').style.display = 'none';
-        document.getElementById('crosshair').style.display = 'none';
-        document.getElementById('info-panel').style.display = 'none';
-        document.getElementById('block-name').style.display = 'none';
-        document.body.style.cursor = 'default';
-
-        if (document.pointerLockElement) {
-            document.exitPointerLock();
-        }
-        isPlaying = false;
-    }
-
-    // =====================================================
-    // GAME LOOP
-    // =====================================================
-
-    var chunkUpdateTimer = 0;
-
-    function animate() {
-        requestAnimationFrame(animate);
-
-        var dt = Math.min(clock.getDelta(), 0.05);
-
-        if (isPlaying) {
-            updatePlayer(dt);
-            updateParticles(dt);
-
-            // Update highlight box
-            var target = getTargetBlock();
-            if (target) {
-                highlightBox.position.set(target.x + 0.5, target.y + 0.5, target.z + 0.5);
-                highlightBox.visible = true;
-            } else {
-                highlightBox.visible = false;
-            }
-
-            // Update chunks periodically
-            chunkUpdateTimer += dt;
-            if (chunkUpdateTimer > 1.0) {
-                updateChunks();
-                chunkUpdateTimer = 0;
-            }
-
-            // Update HUD
-            updateInfoPanel();
-        }
-
-        renderer.render(scene, camera);
-    }
-
-    // =====================================================
-    // START
-    // =====================================================
-
-    init();
-
-    </script>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="inicio">
+        <div class="hero-content">
+            <div class="hero-badge">Servidor de Minecraft</div>
+            <h1 class="hero-title">
+                <span class="title-line">NASA</span>
+                <span class="title-line title-highlight">CRAFT</span>
+            </h1>
+            <p class="hero-subtitle">Explore o universo. Construa sua base espacial. Viva aventuras intergalacticas.</p>
+            <div class="hero-actions">
+                <a href="#como-jogar" class="btn btn-primary">
+                    <span class="btn-icon">&#9654;</span>
+                    Comecar a Jogar
+                </a>
+                <a href="#sobre" class="btn btn-secondary">Saiba Mais</a>
+            </div>
+            <div class="hero-stats">
+                <div class="stat">
+                    <span class="stat-number" data-target="150">0</span>
+                    <span class="stat-label">Jogadores</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number" data-target="99">0</span>
+                    <span class="stat-label">% Uptime</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number" data-target="24">0</span>
+                    <span class="stat-label">Horas Online</span>
+                </div>
+            </div>
+        </div>
+        <div class="hero-scroll">
+            <span>Scroll</span>
+            <div class="scroll-arrow"></div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="section" id="sobre">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">Sobre Nos</span>
+                <h2 class="section-title">O que e o NasaCraft?</h2>
+                <p class="section-desc">Um servidor de Minecraft unico com tema espacial, onde a criatividade nao tem limites.</p>
+            </div>
+            <div class="about-grid">
+                <div class="about-card">
+                    <div class="about-icon">&#127759;</div>
+                    <h3>Mundo Espacial</h3>
+                    <p>Explore planetas unicos, asteroides e estacoes espaciais em um mundo gerado exclusivamente para voce.</p>
+                </div>
+                <div class="about-card">
+                    <div class="about-icon">&#9889;</div>
+                    <h3>Comunidade Ativa</h3>
+                    <p>Faca parte de uma comunidade incrivel de jogadores apaixonados por exploracao e construcao.</p>
+                </div>
+                <div class="about-card">
+                    <div class="about-icon">&#128640;</div>
+                    <h3>Atualizacoes Constantes</h3>
+                    <p>Novos conteudos, eventos e recursos sao adicionados regularmente para manter a experiencia sempre fresca.</p>
+                </div>
+                <div class="about-card">
+                    <div class="about-icon">&#128296;</div>
+                    <h3>Plugins Exclusivos</h3>
+                    <p>Plugins desenvolvidos especialmente para o NasaCraft, garantindo uma experiencia de jogo unica.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="section section-dark" id="recursos">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">Recursos</span>
+                <h2 class="section-title">O que oferecemos</h2>
+                <p class="section-desc">Funcionalidades que tornam o NasaCraft especial.</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card" data-aos="fade-up">
+                    <div class="feature-number">01</div>
+                    <div class="feature-content">
+                        <h3>Survival Espacial</h3>
+                        <p>Sobreviva em planetas hostis, colete recursos raros e construa sua base intergalactica.</p>
+                    </div>
+                    <div class="feature-glow"></div>
+                </div>
+                <div class="feature-card" data-aos="fade-up">
+                    <div class="feature-number">02</div>
+                    <div class="feature-content">
+                        <h3>Economia Avancada</h3>
+                        <p>Sistema economico completo com lojas, mercado e trocas entre jogadores.</p>
+                    </div>
+                    <div class="feature-glow"></div>
+                </div>
+                <div class="feature-card" data-aos="fade-up">
+                    <div class="feature-number">03</div>
+                    <div class="feature-content">
+                        <h3>Clas e Aliancas</h3>
+                        <p>Crie ou junte-se a um cla, forme aliancas e domine o universo junto com seus amigos.</p>
+                    </div>
+                    <div class="feature-glow"></div>
+                </div>
+                <div class="feature-card" data-aos="fade-up">
+                    <div class="feature-number">04</div>
+                    <div class="feature-content">
+                        <h3>Eventos Semanais</h3>
+                        <p>Participe de eventos especiais com premios exclusivos toda semana.</p>
+                    </div>
+                    <div class="feature-glow"></div>
+                </div>
+                <div class="feature-card" data-aos="fade-up">
+                    <div class="feature-number">05</div>
+                    <div class="feature-content">
+                        <h3>PvP Arenas</h3>
+                        <p>Arenas de combate em ambientes espaciais para testar suas habilidades.</p>
+                    </div>
+                    <div class="feature-glow"></div>
+                </div>
+                <div class="feature-card" data-aos="fade-up">
+                    <div class="feature-number">06</div>
+                    <div class="feature-content">
+                        <h3>Protecao de Terreno</h3>
+                        <p>Proteja suas construcoes com sistema avancado de protecao de areas.</p>
+                    </div>
+                    <div class="feature-glow"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How to Play Section -->
+    <section class="section" id="como-jogar">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">Como Jogar</span>
+                <h2 class="section-title">Entre no servidor</h2>
+                <p class="section-desc">Em apenas 3 passos voce ja esta jogando!</p>
+            </div>
+            <div class="steps-grid">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <h3>Abra o Minecraft</h3>
+                    <p>Abra o Minecraft Java Edition na versao mais recente.</p>
+                </div>
+                <div class="step-connector">
+                    <div class="connector-line"></div>
+                    <div class="connector-dot"></div>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <h3>Adicione o Servidor</h3>
+                    <p>Clique em "Multiplayer" e depois "Adicionar Servidor".</p>
+                </div>
+                <div class="step-connector">
+                    <div class="connector-line"></div>
+                    <div class="connector-dot"></div>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <h3>Conecte-se</h3>
+                    <p>Use o IP abaixo e clique em "Entrar no Servidor".</p>
+                </div>
+            </div>
+            <div class="server-ip-box" id="jogar">
+                <div class="ip-label">IP do Servidor</div>
+                <div class="ip-address" id="server-ip">nasacraft.com.br</div>
+                <button class="ip-copy-btn" id="copy-ip" title="Copiar IP">
+                    <span class="copy-icon">&#128203;</span>
+                    <span class="copy-text">Copiar</span>
+                </button>
+                <div class="ip-version">Versao: Java 1.20+</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Rules Section -->
+    <section class="section section-dark" id="regras">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">Regras</span>
+                <h2 class="section-title">Regras do Servidor</h2>
+                <p class="section-desc">Para manter a diversao de todos, siga estas regras.</p>
+            </div>
+            <div class="rules-grid">
+                <div class="rule-card">
+                    <div class="rule-icon">&#128721;</div>
+                    <h3>Sem Hacks ou Cheats</h3>
+                    <p>O uso de qualquer tipo de hack, mod ilegal ou exploit resultara em banimento permanente.</p>
+                </div>
+                <div class="rule-card">
+                    <div class="rule-icon">&#129309;</div>
+                    <h3>Respeite os Jogadores</h3>
+                    <p>Trate todos com respeito. Ofensas, bullying e discriminacao nao serao tolerados.</p>
+                </div>
+                <div class="rule-card">
+                    <div class="rule-icon">&#127463;</div>
+                    <h3>Sem Griefing</h3>
+                    <p>Nao destrua ou danifique construcoes de outros jogadores sem permissao.</p>
+                </div>
+                <div class="rule-card">
+                    <div class="rule-icon">&#128172;</div>
+                    <h3>Chat Limpo</h3>
+                    <p>Mantenha o chat livre de spam, links suspeitos e conteudo inapropriado.</p>
+                </div>
+                <div class="rule-card">
+                    <div class="rule-icon">&#9878;</div>
+                    <h3>Jogo Justo</h3>
+                    <p>Nao use bugs ou glitches para obter vantagem sobre outros jogadores.</p>
+                </div>
+                <div class="rule-card">
+                    <div class="rule-icon">&#128101;</div>
+                    <h3>Siga a Equipe</h3>
+                    <p>Siga as instrucoes da equipe de moderacao. Eles estao aqui para ajudar.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Team Section -->
+    <section class="section" id="equipe">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">Equipe</span>
+                <h2 class="section-title">Nossa Equipe</h2>
+                <p class="section-desc">As pessoas por tras do NasaCraft.</p>
+            </div>
+            <div class="team-grid">
+                <div class="team-card">
+                    <div class="team-avatar">
+                        <img src="https://mc-heads.net/avatar/MHF_Steve/120" alt="Dono" loading="lazy">
+                        <div class="team-badge owner">Dono</div>
+                    </div>
+                    <h3>NasaCraft</h3>
+                    <p>Fundador e Desenvolvedor</p>
+                </div>
+                <div class="team-card">
+                    <div class="team-avatar">
+                        <img src="https://mc-heads.net/avatar/MHF_Alex/120" alt="Admin" loading="lazy">
+                        <div class="team-badge admin">Admin</div>
+                    </div>
+                    <h3>Admin</h3>
+                    <p>Administrador</p>
+                </div>
+                <div class="team-card">
+                    <div class="team-avatar">
+                        <img src="https://mc-heads.net/avatar/MHF_Golem/120" alt="Moderador" loading="lazy">
+                        <div class="team-badge mod">Mod</div>
+                    </div>
+                    <h3>Moderador</h3>
+                    <p>Moderacao e Suporte</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <h2 class="cta-title">Pronto para explorar o universo?</h2>
+            <p class="cta-desc">Junte-se a nos agora e comece sua aventura espacial no NasaCraft!</p>
+            <div class="cta-actions">
+                <a href="#jogar" class="btn btn-primary btn-lg">
+                    <span class="btn-icon">&#128640;</span>
+                    Entrar no Servidor
+                </a>
+                <a href="https://discord.gg/nasacraft" target="_blank" rel="noopener" class="btn btn-discord btn-lg">
+                    <svg class="discord-icon" viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                        <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/>
+                    </svg>
+                    Discord
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <div class="footer-logo">
+                        <span class="logo-icon">&#9733;</span>
+                        <span class="logo-text">NASA<span class="logo-highlight">CRAFT</span></span>
+                    </div>
+                    <p>O servidor de Minecraft com tema espacial mais incrivel do Brasil.</p>
+                </div>
+                <div class="footer-links">
+                    <h4>Links</h4>
+                    <ul>
+                        <li><a href="#inicio">Inicio</a></li>
+                        <li><a href="#sobre">Sobre</a></li>
+                        <li><a href="#recursos">Recursos</a></li>
+                        <li><a href="#regras">Regras</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Comunidade</h4>
+                    <ul>
+                        <li><a href="https://discord.gg/nasacraft" target="_blank" rel="noopener">Discord</a></li>
+                        <li><a href="#equipe">Equipe</a></li>
+                        <li><a href="#como-jogar">Como Jogar</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 NasaCraft. Todos os direitos reservados.</p>
+                <p class="footer-disclaimer">NasaCraft nao e afiliado a Mojang Studios ou Microsoft.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to Top -->
+    <button class="back-to-top" id="back-to-top" aria-label="Voltar ao topo">
+        <span>&#8593;</span>
+    </button>
+
+    <script src="script.js"></script>
 </body>
 </html>
