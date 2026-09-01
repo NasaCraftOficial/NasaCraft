@@ -1,0 +1,58 @@
+version: '3.8'
+
+services:
+  minecraft-server:
+    image: itzg/minecraft-server:latest
+    container_name: nasacraft-server
+    ports:
+      - "25565:25565"
+    environment:
+      EULA: "TRUE"
+      GAMEMODE: survival
+      DIFFICULTY: normal
+      LEVEL: NasaCraft
+      MOTD: "§6NasaCraft Server §7- Java Edition"
+      MAX_PLAYERS: 20
+      VIEW_DISTANCE: 10
+      SPAWN_PROTECTION: 16
+      PVP: "true"
+      ENABLE_COMMAND_BLOCKS: "true"
+      MEMORY: 2G
+      OPS: "Player1,Player2"
+      ENABLE_WHITELIST: "false"
+    volumes:
+      - ./world:/data
+      - ./server.properties:/data/server.properties
+      - ./logs:/data/logs
+    restart: unless-stopped
+    networks:
+      - minecraft-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:25575/metrics"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Gerenciador de backups (opcional)
+  backup:
+    image: busybox:latest
+    container_name: nasacraft-backup
+    volumes:
+      - ./world:/data/world:ro
+      - ./backups:/backups
+    entrypoint: /bin/sh
+    command: -c "while true; do tar -czf /backups/world-$$(date +%Y%m%d-%H%M%S).tar.gz -C /data world && find /backups -mtime +7 -delete && sleep 21600; done"
+    restart: unless-stopped
+    networks:
+      - minecraft-network
+    depends_on:
+      - minecraft-server
+
+networks:
+  minecraft-network:
+    driver: bridge
+
+volumes:
+  world:
+  backups:

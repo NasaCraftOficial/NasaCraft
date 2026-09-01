@@ -1,0 +1,53 @@
+# Diretórios do servidor
+world/
+world_nether/
+world_the_end/
+backups/
+logs/
+
+# Arquivos temporários do Docker
+*.log
+.DS_Store
+
+# Arquivos de Sistema
+Thumbs.db
+.classpath
+.project
+.settings/
+*.swp
+*.swo
+*~
+
+# IDE
+.idea/
+.vscode/
+*.iml
+*.iws
+*.ipr
+
+# Node/npm (se usar web interface)
+node_modules/
+package-lock.json
+yarn.lock
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Arquivos sensíveis
+.env
+.env.local
+rcon.password
+ops.json
+banned-ips.json
+banned-players.json
+whitelist.json
+
+# Cache
+.cache/
+.tmp/
+
+# Logs
+*.log
+logs/**/*
