@@ -1,0 +1,113 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    font-family: 'Arial', sans-serif;
+    color: #fff;
+}
+
+.game-container {
+    text-align: center;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    backdrop-filter: blur(4px);
+}
+
+h1 {
+    margin-bottom: 20px;
+    font-size: 2.5em;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.scoreboard {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+    padding: 15px 0;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.score {
+    flex: 1;
+    padding: 10px;
+}
+
+.score h2 {
+    font-size: 1.3em;
+    margin-bottom: 8px;
+    color: #ffd700;
+}
+
+.score p {
+    font-size: 2.5em;
+    font-weight: bold;
+    color: #00ff00;
+    text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+}
+
+.game-info {
+    margin-bottom: 15px;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    font-size: 0.9em;
+}
+
+.game-info p {
+    margin: 5px 0;
+    color: #e0e0e0;
+}
+
+canvas {
+    display: block;
+    background: #000;
+    border: 3px solid #fff;
+    border-radius: 8px;
+    margin: 20px auto;
+    cursor: none;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+}
+
+.game-status {
+    margin-top: 15px;
+    padding: 10px;
+    background: rgba(255, 255, 0, 0.1);
+    border-radius: 8px;
+    font-size: 1.1em;
+}
+
+#gameStatus {
+    color: #ffff00;
+    font-weight: bold;
+    text-shadow: 0 0 10px rgba(255, 255, 0, 0.5);
+}
+
+/* Responsive design */
+@media (max-width: 600px) {
+    .game-container {
+        padding: 15px;
+    }
+
+    canvas {
+        max-width: 100%;
+        height: auto;
+    }
+
+    h1 {
+        font-size: 1.8em;
+    }
+
+    .score p {
+        font-size: 1.8em;
+    }
+}
